@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_home"
+            android:icon="@drawable/ic_home_black_24dp"
+            android:title="Home" />
+        <item
+            android:id="@+id/nav_actions"
+            android:icon="@drawable/ic_event_available_black_24dp"
+            android:title="Minhas Acções" />
+        <item
+            android:id="@+id/nav_closed_actions"
+            android:icon="@drawable/ic_event_busy_black_24dp"
+            android:title="Acções Fechadas" />
+        <item
+            android:id="@+id/nav_atrasadas_actions"
+            android:icon="@drawable/ic_event_note_black_24dp"
+            android:title="Acções Atrasadas" />
+    </group>
+
+    <item android:title="Utilizador">
+        <menu>
+            <item
+                android:id="@+id/nav_perfil"
+                android:icon="@drawable/ic_perfil_black_24dp"
+                android:title="Perfil" />
+            <item
+                android:id="@+id/nav_exit"
+                android:icon="@drawable/ic_exit_to_app_black_24dp"
+                android:title="Sair" />
+        </menu>
+    </item>
+
+</menu>
