@@ -16,6 +16,7 @@ import android.widget.Toast;
 import com.basgeekball.awesomevalidation.AwesomeValidation;
 import com.basgeekball.awesomevalidation.ValidationStyle;
 import com.bumptech.glide.Glide;
+import com.kaya.risk31app.Activities.ActionsActivity;
 import com.kaya.risk31app.Activities.HomeActivity;
 import com.kaya.risk31app.Service.UserProfileService;
 import com.kaya.risk31app.Storage.AccessToken;
@@ -65,6 +66,7 @@ public class LoginActivity extends AppCompatActivity {
                 loginUser();
             }
         });
+
     }
 
     private void variaveis() {
@@ -140,7 +142,7 @@ public class LoginActivity extends AppCompatActivity {
           public void onResponse(Call<UserProfileService> call, Response<UserProfileService> response) {
               if (response.isSuccessful()) {
                   userStorage.saveUserProfile(response.body());
-                  showMessage("Bem vindo brada");
+                  showMessage("Bem vindo ao Risk31");
 //                  getPerfil();
               }
               userStorage.saveUserProfile(response.body());
@@ -197,6 +199,8 @@ public class LoginActivity extends AppCompatActivity {
         if (tokenManager.getToken().getAccessToken() != null) {
 
             Intent homeActivity = new Intent(getApplicationContext(), HomeActivity.class);
+            Intent ActionActivity = new Intent(getApplicationContext(), ActionsActivity.class);
+//            startActivity(ActionActivity);
             startActivity(homeActivity);
             finish();
         }
@@ -216,5 +220,57 @@ public class LoginActivity extends AppCompatActivity {
         Glide.with(this).load(userStorage.getUser().getFoto()).circleCrop()
                 .into(navUserFoto);
     }
+
+    private void checkUser() {
+
+
+        String email = editEMail.getText().toString();
+        String password = editPassword.getText().toString();
+
+        loginProgressBar.setVisibility(View.VISIBLE);
+        btnLogin.setVisibility(View.INVISIBLE);
+        call = service.login(email, password);
+
+        call.enqueue(new Callback<AccessToken>() {
+            @Override
+            public void onResponse(Call<AccessToken> call, Response<AccessToken> response) {
+
+                if (response.isSuccessful()) {
+
+                    loginProgressBar.setVisibility(View.INVISIBLE);
+                    btnLogin.setVisibility(View.VISIBLE);
+                    tokenManager.saveToken(response.body());
+                    saveUser();
+                    callHomeActivity();
+
+                } else {
+                    if (response.code() == 422) {
+                        loginProgressBar.setVisibility(View.INVISIBLE);
+                        btnLogin.setVisibility(View.VISIBLE);
+                        handleErros(response.errorBody());
+                    }
+                    if (response.code() == 401) {
+                        ApiError apiError = Utils.converErrors(response.errorBody());
+                        showMessage(apiError.getMessage());
+                        Toast.makeText(LoginActivity.this, apiError.getMessage(), Toast.LENGTH_LONG).show();
+                        loginProgressBar.setVisibility(View.INVISIBLE);
+                        btnLogin.setVisibility(View.VISIBLE);
+                    }
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<AccessToken> call, Throwable t) {
+                Log.w(TAG, "on Failure: " + t.getMessage());
+                showMessage(t.getMessage());
+                loginProgressBar.setVisibility(View.INVISIBLE);
+                btnLogin.setVisibility(View.VISIBLE);
+            }
+        });
+
+
+    }
+
 
 }

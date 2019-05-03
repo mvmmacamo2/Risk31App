@@ -23,9 +23,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.kaya.risk31app.Adapters.ViewPagerAdapter;
+import com.kaya.risk31app.Fragments.AccoesFechadasFragment;
 import com.kaya.risk31app.Fragments.ActionsAtrasadasFragment;
 import com.kaya.risk31app.Fragments.ActionsFragment;
 import com.kaya.risk31app.Fragments.ClosedActionsFragment;
@@ -33,7 +34,6 @@ import com.kaya.risk31app.Fragments.HomeFragment;
 import com.kaya.risk31app.Fragments.PerfilFragment;
 import com.kaya.risk31app.LoginActivity;
 import com.kaya.risk31app.R;
-import com.kaya.risk31app.Service.UserProfileService;
 import com.kaya.risk31app.Service.UserResponse;
 import com.kaya.risk31app.Storage.ApiService;
 import com.kaya.risk31app.Storage.RetrofitBuilder;
@@ -43,8 +43,7 @@ import com.kaya.risk31app.Storage.UserStorage;
 import java.util.ArrayList;
 
 import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+
 
 public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -55,6 +54,9 @@ public class HomeActivity extends AppCompatActivity
     TokenManager tokenManager;
     Call<UserResponse> call;
     UserStorage userStorage;
+    private TabLayout tabLayout;
+    private ViewPager viewPager;
+    private ViewPagerAdapter adapter;
     private static final String TAG = "HomeActivity";
 
     @Override
@@ -64,14 +66,14 @@ public class HomeActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+//        fab.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+//                        .setAction("Action", null).show();
+//            }
+//        });
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -81,31 +83,19 @@ public class HomeActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-//        getSupportActionBar().setTitle("Home");
+//        getSupportActionBar().setTitle("Actions");
         getSupportFragmentManager().beginTransaction().replace(R.id.container, new HomeFragment()).commit();
 
         variaveis();
 
-//        getPerfil();
         final Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-//                Toast.makeText(HomeActivity.this, "Delay funciona", Toast.LENGTH_SHORT).show();
                 getPerfil();
             }
         }, 1000);
 
-//        TabLayout tabLayout = findViewById(R.id.tab_layout);
-//        ViewPager viewPager = findViewById(R.id.view_pager);
-//
-//        ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
-//
-//        viewPagerAdapter.addFragments(new ActionsFragment(), "Accoes");
-//        viewPagerAdapter.addFragments(new HomeFragment(), "Home");
-//
-//        viewPager.setAdapter(viewPagerAdapter);
-//        tabLayout.setupWithViewPager(viewPager);
 
     }
 
@@ -116,6 +106,19 @@ public class HomeActivity extends AppCompatActivity
         tokenManager = TokenManager.getINSTANCE(getSharedPreferences("preferences", MODE_PRIVATE));
         userStorage = UserStorage.getINSTANCE(getSharedPreferences("preferences", MODE_PRIVATE));
         service = RetrofitBuilder.createServiceWithAuth(ApiService.class, tokenManager);
+
+//        tabLayout = findViewById(R.id.tablayouthome_id);
+//        viewPager = findViewById(R.id.viewpagerhome_id);
+//        adapter = new ViewPagerAdapter(getSupportFragmentManager());
+//
+//        adapter.addFragments(new ActionsFragment(), "Todas");
+//        adapter.addFragments(new ActionsAtrasadasFragment(), "Atrasadas");
+//        adapter.addFragments(new ClosedActionsFragment(), "Fechadas");
+//        adapter.addFragments(new AccoesFechadasFragment(), "Cumpridas");
+//
+//
+//        viewPager.setAdapter(adapter);
+//        tabLayout.setupWithViewPager(viewPager);
 
         getPerfil();
     }
@@ -224,41 +227,6 @@ public class HomeActivity extends AppCompatActivity
         navUserEmail.setText(userStorage.getUser().getEmail());
         Glide.with(this).load(userStorage.getUser().getFoto()).circleCrop()
                 .into(navUserFoto);
-//        Toast.makeText(this, "Perfil", Toast.LENGTH_SHORT).show();
     }
-
-
-class ViewPagerAdapter extends FragmentPagerAdapter {
-
-    ArrayList<Fragment> fragments;
-    ArrayList<String> titles;
-
-    ViewPagerAdapter(FragmentManager fragmentManager) {
-        super(fragmentManager);
-        this.fragments = new ArrayList<>();
-        this.titles = new ArrayList<>();
-    }
-
-    @Override
-    public Fragment getItem(int i) {
-        return fragments.get(i);
-    }
-
-    @Override
-    public int getCount() {
-        return fragments.size();
-    }
-
-    public void addFragments(Fragment fragment, String title) {
-        fragments.add(fragment);
-        titles.add(title);
-    }
-
-    @Nullable
-    @Override
-    public CharSequence getPageTitle(int position) {
-        return titles.get(position);
-    }
-}
 
 }
