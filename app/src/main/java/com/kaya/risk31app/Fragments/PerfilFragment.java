@@ -1,14 +1,20 @@
 package com.kaya.risk31app.Fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -16,6 +22,8 @@ import com.bumptech.glide.Glide;
 import com.kaya.risk31app.R;
 import com.kaya.risk31app.Storage.TokenManager;
 import com.kaya.risk31app.Storage.UserStorage;
+
+import java.io.File;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -43,6 +51,15 @@ public class PerfilFragment extends Fragment {
     SharedPreferences preferences;
     TextView tnome, temail, tendereco, tnivel, tcelular;
     ImageView imageViewFoto;
+    EditText editNome, editEmail, editCelular, editEndereco, editNivel;
+    Button btnUpdate;
+    ProgressBar progressBar;
+    File file;
+    Uri uri;
+    Intent CamIntent, GalIntent, CropIntent;
+    final int RequestPermissionCode=1;
+    DisplayMetrics displayMetrics;
+    int width, height;
 
 
     public PerfilFragment() {
@@ -87,17 +104,41 @@ public class PerfilFragment extends Fragment {
         tokenManager = TokenManager.getINSTANCE(preferences);
         userStorage = UserStorage.getINSTANCE(preferences);
 
-        tnome = fragmentView.findViewById(R.id.perfil_nome);
-        tnivel = fragmentView.findViewById(R.id.perfil_nivel);
-        tcelular = fragmentView.findViewById(R.id.perfil_celular);
-        tendereco = fragmentView.findViewById(R.id.perfil_endereco);
-        temail = fragmentView.findViewById(R.id.perfil_email);
+
+        editNome = fragmentView.findViewById(R.id.perfil_edit_name_id);
+        editCelular = fragmentView.findViewById(R.id.perfil_edit_celular_id);
+        editEmail = fragmentView.findViewById(R.id.perfil_edit_email_id);
+        editNivel = fragmentView.findViewById(R.id.perfil_edit_nivel_id);
+        editEndereco = fragmentView.findViewById(R.id.perfil_edit_endereco_id);
+        btnUpdate = fragmentView.findViewById(R.id.button_perfil_update_id);
+        progressBar = fragmentView.findViewById(R.id.progressBarPerfilUpdateId);
+
+        editEmail.setFocusable(false);
+        editNivel.setFocusable(false);
+
+//        editEmail.setEnabled(false);
+//        editEmail.setCursorVisible(false);
+//        editEmail.setKeyListener(null);
+//        editEmail.setBackgroundColor(Color.TRANSPARENT);
+
         imageViewFoto = fragmentView.findViewById(R.id.perfil_foto);
 
         getPerfil();
 
+        updateUser();
+
         return  fragmentView;
-//        return inflater.inflate(R.layout.fragment_perfil, container, false);
+    }
+
+    private void updateUser() {
+
+        btnUpdate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+               btnUpdate.setVisibility(View.INVISIBLE);
+               progressBar.setVisibility(View.VISIBLE);
+            }
+        });
     }
 
 
@@ -111,12 +152,6 @@ public class PerfilFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-//        if (context instanceof OnFragmentInteractionListener) {
-//            mListener = (OnFragmentInteractionListener) context;
-//        } else {
-//            throw new RuntimeException(context.toString()
-//                    + " must implement OnFragmentInteractionListener");
-//        }
     }
 
     @Override
@@ -125,27 +160,20 @@ public class PerfilFragment extends Fragment {
         mListener = null;
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
+
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
 
     private void getPerfil() {
-        tnivel.setText(userStorage.getUser().getNivel());
-        tnome.setText(userStorage.getUser().getName());
-        tcelular.setText(userStorage.getUser().getCelular());
-        temail.setText(userStorage.getUser().getEmail());
-        tendereco.setText(userStorage.getUser().getEndereco());
+        editNivel.setText(userStorage.getUser().getNivel());
+        editNome.setText(userStorage.getUser().getName());
+        editCelular.setText(userStorage.getUser().getCelular());
+        editEmail.setText(userStorage.getUser().getEmail());
+        editEndereco.setText(userStorage.getUser().getEndereco());
+
+
         Glide.with(getActivity()).load(userStorage.getUser().getFoto()).circleCrop()
                 .into(imageViewFoto);
     }

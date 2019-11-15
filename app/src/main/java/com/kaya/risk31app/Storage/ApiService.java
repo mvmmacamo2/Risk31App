@@ -47,4 +47,9 @@ public interface ApiService {
 
     @GET("get-my-actions/{id}")
     Call<ActionsResponse> getActions(@Path("id") int id);
+
+    @FormUrlEncoded
+    @POST("save-close-action")
+    Call<Actions> saveCloseAction(@Field("id") int id, @Field("descricao") String descricao);
+
 }

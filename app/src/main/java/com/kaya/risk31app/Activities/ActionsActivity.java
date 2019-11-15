@@ -58,6 +58,8 @@ public class ActionsActivity extends AppCompatActivity {
         viewPager.setAdapter(adapter);
         tabLayout.setupWithViewPager(viewPager);
 
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
 
     }
 }

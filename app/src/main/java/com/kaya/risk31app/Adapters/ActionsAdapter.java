@@ -43,6 +43,7 @@ public class ActionsAdapter extends RecyclerView.Adapter<ActionsAdapter.MyViewHo
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
       holder.textViewAction.setText(mData.get(position).getAction());
       holder.textViewEstado.setText(mData.get(position).getEstado());
+      holder.textViewCreatedAt.setText(mData.get(position).getCreated_at());
       holder.textViewEstado.setBackgroundColor(Color.parseColor(mData.get(position).getColor()));
     }
 
@@ -52,7 +53,7 @@ public class ActionsAdapter extends RecyclerView.Adapter<ActionsAdapter.MyViewHo
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        TextView textViewAction, textViewEstado;
+        TextView textViewAction, textViewEstado, textViewCreatedAt;
         private final int VIEW_TYPE_ITEM = 0, VIEW_TYPE_LOADING = 1;
         boolean isLoading;
         int visibleThreshold = 5;
@@ -61,6 +62,7 @@ public class ActionsAdapter extends RecyclerView.Adapter<ActionsAdapter.MyViewHo
             super(itemView);
             textViewAction = itemView.findViewById(R.id.action_name);
             textViewEstado = itemView.findViewById(R.id.action_estado);
+            textViewCreatedAt = itemView.findViewById(R.id.action_created_at);
             progressBarLoading = itemView.findViewById(R.id.progressBarLoding_id);
 
 

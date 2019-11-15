@@ -5,8 +5,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".Activities.ActionsActivity"
-    android:background="#fcfcfc">
+    android:background="#fafafa">
 
+    <!--#fcfcfc-->
     <!--<android.support.v7.widget.Toolbar-->
         <!--android:id="@+id/toolbarActions"-->
         <!--android:layout_width="match_parent"-->

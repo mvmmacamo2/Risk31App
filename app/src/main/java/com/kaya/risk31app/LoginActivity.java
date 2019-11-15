@@ -143,7 +143,6 @@ public class LoginActivity extends AppCompatActivity {
               if (response.isSuccessful()) {
                   userStorage.saveUserProfile(response.body());
                   showMessage("Bem vindo ao Risk31");
-//                  getPerfil();
               }
               userStorage.saveUserProfile(response.body());
           }
